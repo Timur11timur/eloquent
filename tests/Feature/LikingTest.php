@@ -4,10 +4,11 @@ namespace Tests\Feature;
 
 use App\User;
 use App\Post;
+use App\Comment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class LikePostsTest extends TestCase
+class LikingTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -22,5 +23,18 @@ class LikePostsTest extends TestCase
 
         $this->assertCount(1, $post->likes);
         $this->assertTrue($post->likes->contains('id', auth()->id() ));
+    }
+
+    /** @test */
+    public function a_comment_can_be_liked()
+    {
+        $this->actingAs(factory(User::class)->create());
+
+        $comment = factory(Comment::class)->create();
+
+        $comment->like();
+
+        $this->assertCount(1, $comment->likes);
+        $this->assertTrue($comment->likes->contains('id', auth()->id() ));
     }
 }
